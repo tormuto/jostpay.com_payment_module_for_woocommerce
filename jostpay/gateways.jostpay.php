@@ -29,7 +29,7 @@ function wc_jostpay_pay_gateway()
 		{
 			// Jostpay values
 			$this->id			= 'jostpay';
-			$this->method_title = __('Jostpay Payment', 'woothemes');
+			$this->method_title = __('Mastercard, Visacard, Verve, Perfect Money & Bitcoin (JostPay)', 'woothemes');
 	        $this->icon 		= WP_PLUGIN_URL . "/" . plugin_basename( dirname(__FILE__)) . '/images/logo.png';
 	        $this->has_fields 	= false;		
 
@@ -77,7 +77,7 @@ function wc_jostpay_pay_gateway()
 		{
 	    	?>
 			<h3><?php _e('Jostpay Payment', 'woothemes'); ?></h3>
-			<p><?php _e('With Jostpay you can accept payments from Visa and Mastercard.  If you need help with the payment module, <a href="http://www.tormuto.com/support/jostpay-payment-module" target="_blank">click here for a Payment module description</a>', 'woothemes'); ?></p>
+			<p><?php _e('With Jostpay you can accept payments from Mastercard, Visacard, Verve, Perfect Money & Bitcoin.  If you need help with the payment module, <a href="http://www.jostpay.com/docs" target="_blank">click here for a Payment module description</a>', 'woothemes'); ?></p>
 	    	<table class="form-table">
 	    	<?php
 	    		if ( $this->is_valid_for_use() ) :	    	
@@ -117,13 +117,13 @@ function wc_jostpay_pay_gateway()
 				'title' => __( 'Title', 'woothemes' ),
 				'type' => 'text',
 				'description' => __( 'This controls the title which the user sees during checkout.', 'woothemes' ),
-				'default' => __( 'Jostpay Payment', 'woothemes' )
+				'default' => __( 'Mastercard, Visacard, Verve, Perfect Money & Bitcoin (JostPay)', 'woothemes' )
 				),
 				'description' => array(
 				'title' => __( 'Description', 'woothemes' ),
 				'type' => 'text',
 				'description' => __( 'Jostpay Payment description', 'woothemes' ),
-				'default' => __( 'Jostpay is a secure payment provider. Simply select Jostpay and complete the payment', 'woothemes' )
+				'default' => __( 'Pay with Master,Visa,Verve Card, Perfect Money & Bitcoin', 'woothemes' )
 				),
 				'jostpay_merchant_id' => array(
 				'title' => __( 'Jostpay Merchant Id', 'woothemes' ),
@@ -226,7 +226,7 @@ function wc_jostpay_pay_gateway()
 			$wpdb->query($sql);
 		
 			$jostpay_merchant_id=$this->jostpay_merchant_id;
-			$form_action='https://jostpayng.com/sci';
+			$form_action='https://jostpay.com/sci';
 			$item_id=$order->id;
 
 			$input_fields="
@@ -363,7 +363,14 @@ function wc_jostpay_pay_gateway()
 				else $response="HTTP Error $returnCode: $response. ";
 				$new_status=0;
 				
-				if(!empty($json))
+				
+				if(!empty($json['error']))
+				{
+					$response_description=$json['error'];
+					$response_code=$returnCode;
+					
+				}
+				elseif(!empty($json))
 				{
 					$response_description=$json['info'];
 					$response_code=$new_status=$json['status'];
